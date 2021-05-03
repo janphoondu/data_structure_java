@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class RBTree<K extends Comparable<K>, V> {
 
+    // 避免用户记忆RED / Black对应的true和false
     private static final boolean RED = true;
     private static final boolean BLACK = false;
 
@@ -43,13 +44,36 @@ public class RBTree<K extends Comparable<K>, V> {
         return node.color;
     }
 
+    //      node                   x
+    //     /    \    左旋转       /   \
+    //    T1    x    ----->    node   T3
+    //         /  \            /  \
+    //        T2  T3          T1  T2
+    private Node leftRotate(Node node){
+        // 需要旋转的节点，将替代node的节点
+        Node x = node.right;
+
+        // 1.左旋转，腾出x节点的左子树
+        node.right = x.left;
+        // 2.将 node 变成 x 的左子树
+        x.left = node;
+        //3. 修改x节点的颜色，和原来的node节点一致
+        x.color = node.color;
+        //4. 成为x的左节点的node将变成红节点
+        node.color = RED;
+
+        // 需要返回当前的根节点 ，当前的根节点是x
+        return x;
+    }
+
     // 向二分搜索树中添加新的元素(key, value)
     public void add(K key, V value){
         root = add(root, key, value);
+        root.color = RED;   //需要保持红黑树的根节点为黑节点！
     }
 
-    // 向以node为根的二分搜索树中插入元素(key, value)，递归算法
-    // 返回插入新节点后二分搜索树的根
+    // 向以node为根的红黑树中插入元素(key, value)，递归算法
+    // 返回插入新节点后红黑树的根
     private Node add(Node node, K key, V value){
 
         if(node == null){
