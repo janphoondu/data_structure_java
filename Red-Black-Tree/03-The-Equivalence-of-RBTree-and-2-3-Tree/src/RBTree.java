@@ -118,6 +118,24 @@ public class RBTree<K extends Comparable<K>, V> {
         else // key.compareTo(node.key) == 0
             node.value = value;
 
+        //  右节点是红节点          左节点是黑节点
+        //    左旋转
+        if (isRed(node.right) && !isRed(node.left)){
+            node = leftRotate(node);
+        }
+
+        // 左节点是黑节点       右节点是红节点
+        //    右旋转
+        if (isRed(node.left) && isRed(node.left.left)){
+            node = rightRotate(node);
+        }
+
+        //  判断是否需要颜色翻转
+        //     左右节点都是红节点
+        if(isRed(node.left) && isRed(node.right)){
+            flipColor(node);
+        }
+
         return node;
     }
 
@@ -236,7 +254,7 @@ public class RBTree<K extends Comparable<K>, V> {
         System.out.println("Pride and Prejudice");
 
         ArrayList<String> words = new ArrayList<>();
-        if(FileOperation.readFile("pride-and-prejudice.txt", words)) {
+        if(FileOperation.readFile("Red-Black-Tree/03-The-Equivalence-of-RBTree-and-2-3-Tree/pride-and-prejudice.txt", words)) {
             System.out.println("Total words: " + words.size());
 
             RBTree<String, Integer> map = new RBTree<>();
