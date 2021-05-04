@@ -53,7 +53,7 @@ public class RBTree<K extends Comparable<K>, V> {
         // 需要旋转的节点，将替代node的节点
         Node x = node.right;
 
-        // 1.左旋转，腾出x节点的左子树
+        // 1.左旋转，腾出node节点的左子树
         node.right = x.left;
         // 2.将 node 变成 x 的左子树
         x.left = node;
@@ -64,6 +64,36 @@ public class RBTree<K extends Comparable<K>, V> {
 
         // 需要返回当前的根节点 ，当前的根节点是x
         return x;
+    }
+
+    // 颜色翻转
+    // 当给一个3node节点添加元素的时候，需要发生颜色翻转
+    private void flipColor(Node node){
+        node.left.color = BLACK;
+        node.right.color = BLACK;
+        node.color = RED;
+    }
+
+    // 当向一个3node节点插入一个节点的时候，右旋转
+    //     node             x
+    //     /   \           / \
+    //    x    T2         y  node
+    //   / \                 /  \
+    //  y  T1               T1   T2
+    private Node rightRotate(Node node){
+        Node x = node.left;
+
+        // 1.左旋转，腾出node节点的右子树
+        node.left = x.right;
+        // 2.将 node 变成x的右子树
+        x.right = node;
+        // 3.修改x的颜色，保证当前的x节点和原位置的node节点一致
+        x.color = node.color;
+        node.color = RED;
+
+        //此时的根节点是x
+        return x;
+
     }
 
     // 向二分搜索树中添加新的元素(key, value)
